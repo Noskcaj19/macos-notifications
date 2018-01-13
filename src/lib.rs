@@ -192,8 +192,12 @@ mod tests {
     use super::Notification;
 
     #[test]
-    fn title() {
+    fn init() {
         super::init();
+    }
+
+    #[test]
+    fn title() {
         let mut note = Notification::new();
 
         note.title("A title");
@@ -219,4 +223,36 @@ mod tests {
         note.deliver();
     }
 
+    // The actual resource does not have to exist, we are only testing for segfaults
+    #[test]
+    fn content_img_path() {
+        let mut note = Notification::new();
+
+        note.content_image_path("/");
+        note.deliver();
+    }
+
+    #[test]
+    fn content_image_url() {
+        let mut note = Notification::new();
+
+        note.content_image_url("https://google.com");
+        note.deliver();
+    }
+
+    #[test]
+    fn app_img_path() {
+        let mut note = Notification::new();
+
+        note.app_image_path("/");
+        note.deliver();
+    }
+
+    #[test]
+    fn app_img_url() {
+        let mut note = Notification::new();
+
+        note.app_image_url("https://google.com");
+        note.deliver();
+    }
 }
