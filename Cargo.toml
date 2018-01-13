@@ -1,0 +1,8 @@
+[package]
+authors = ["Noskcaj <kcajdev@gmail.com>"]
+name = "macos-notifications"
+version = "0.1.0"
+
+[dependencies]
+cocoa = "0.13.0"
+objc = "0.2.2"
