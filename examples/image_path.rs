@@ -1,5 +1,7 @@
 extern crate macos_notifications;
 
+use macos_notifications::{Notification, NotificationImage};
+
 use std::env;
 use std::path::PathBuf;
 
@@ -18,9 +20,9 @@ fn main() {
     macos_notifications::init();
 
     // Construct and send a new notification
-    macos_notifications::Notification::new()
+    Notification::new()
         .title("Image")
-        .content_image_path(image1.to_str().unwrap())
-        .app_image_path(image2.to_str().unwrap())
+        .content_image(NotificationImage::File(image1.to_str().unwrap()))
+        .app_image(NotificationImage::File(image2.to_str().unwrap()))
         .deliver();
 }

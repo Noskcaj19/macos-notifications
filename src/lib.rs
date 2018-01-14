@@ -104,29 +104,16 @@ impl<'a> Notification<'a> {
         self
     }
 
-    /// Sets the notification content image to the contents of local path, this is the image on the right of the notification.
-    pub fn content_image_path(&mut self, path: &'a str) -> &mut Notification<'a> {
-        self.content_image = Some(NotificationImage::File(path));
+    /// Sets the notification content image, this is the image on the right of the notification.
+    pub fn content_image(&mut self, image: NotificationImage<'a>) -> &mut Notification<'a> {
+        self.content_image = Some(image);
         self
     }
 
-    /// Sets the notification content image to the contents of a url, this is the image on the right of the notification.
-    pub fn content_image_url(&mut self, url: &'a str) -> &mut Notification<'a> {
-        self.content_image = Some(NotificationImage::Url(url));
-        self
-    }
-
-    /// Sets the notification app image to the contents of a local path, this is the image on the left of the notification.
+    /// Sets the notification app image, this is the image on the left of the notification.
     /// This uses private APIs and may break
-    pub fn app_image_path(&mut self, path: &'a str) -> &mut Notification<'a> {
-        self.app_image = Some(NotificationImage::File(path));
-        self
-    }
-
-    /// Sets the notification app image to the contents of a url, this is the image on the left of the notification.
-    /// This uses private APIs and may break
-    pub fn app_image_url(&mut self, url: &'a str) -> &mut Notification<'a> {
-        self.app_image = Some(NotificationImage::Url(url));
+    pub fn app_image(&mut self, image: NotificationImage<'a>) -> &mut Notification<'a> {
+        self.app_image = Some(image);
         self
     }
 
@@ -207,7 +194,7 @@ impl<'a> Notification<'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::Notification;
+    use super::{Notification, NotificationImage};
 
     #[test]
     fn init() {
@@ -246,7 +233,7 @@ mod tests {
     fn content_img_path() {
         let mut note = Notification::new();
 
-        note.content_image_path("/");
+        note.content_image(NotificationImage::File("/"));
         note.deliver();
     }
 
@@ -254,7 +241,7 @@ mod tests {
     fn content_image_url() {
         let mut note = Notification::new();
 
-        note.content_image_url("https://google.com");
+        note.content_image(NotificationImage::Url("https://google.com"));
         note.deliver();
     }
 
@@ -262,7 +249,7 @@ mod tests {
     fn app_img_path() {
         let mut note = Notification::new();
 
-        note.app_image_path("/");
+        note.app_image(NotificationImage::File("/"));
         note.deliver();
     }
 
@@ -270,7 +257,7 @@ mod tests {
     fn app_img_url() {
         let mut note = Notification::new();
 
-        note.app_image_url("https://google.com");
+        note.app_image(NotificationImage::Url("https://google.com"));
         note.deliver();
     }
 }
