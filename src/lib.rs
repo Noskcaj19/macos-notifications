@@ -1,3 +1,7 @@
+//! MacOS notifcations in Rust
+//!
+//! Provides access to the NSUserNotification APIs
+
 extern crate cocoa;
 #[macro_use]
 extern crate objc;
@@ -52,13 +56,16 @@ pub fn init() -> bool {
 }
 
 /// Possible image sources for `Notification`
-/// `Url` refers to a remote resource
-/// `File` refers to a resource on the disk
 pub enum NotificationImage<'a> {
+    /// A remote resource
     Url(&'a str),
+    /// A local resource on the disk
     File(&'a str),
 }
 
+/// A Desktop notifiction
+///
+/// Configurable via builder pattern before being delivered by `deliver()`
 pub struct Notification<'a> {
     title: Option<&'a str>,
     subtitle: Option<&'a str>,
@@ -68,6 +75,7 @@ pub struct Notification<'a> {
 }
 
 impl<'a> Notification<'a> {
+    /// Creates a new notification with no fields set
     pub fn new() -> Notification<'a> {
         Notification {
             title: None,
@@ -78,41 +86,51 @@ impl<'a> Notification<'a> {
         }
     }
 
+    /// Sets the title of the notification
     pub fn title(&mut self, title: &'a str) -> &mut Notification<'a> {
         self.title = Some(title);
         self
     }
 
+    /// Sets the subtitle of the notification
     pub fn subtitle(&mut self, subtitle: &'a str) -> &mut Notification<'a> {
         self.subtitle = Some(subtitle);
         self
     }
 
+    /// Sets the body text of the notification
     pub fn body(&mut self, body: &'a str) -> &mut Notification<'a> {
         self.body = Some(body);
         self
     }
 
+    /// Sets the notification content image to the contents of local path, this is the image on the right of the notification.
     pub fn content_image_path(&mut self, path: &'a str) -> &mut Notification<'a> {
         self.content_image = Some(NotificationImage::File(path));
         self
     }
 
+    /// Sets the notification content image to the contents of a url, this is the image on the right of the notification.
     pub fn content_image_url(&mut self, url: &'a str) -> &mut Notification<'a> {
         self.content_image = Some(NotificationImage::Url(url));
         self
     }
 
+    /// Sets the notification app image to the contents of a local path, this is the image on the left of the notification.
+    /// This uses private APIs and may break
     pub fn app_image_path(&mut self, path: &'a str) -> &mut Notification<'a> {
         self.app_image = Some(NotificationImage::File(path));
         self
     }
 
+    /// Sets the notification app image to the contents of a url, this is the image on the left of the notification.
+    /// This uses private APIs and may break
     pub fn app_image_url(&mut self, url: &'a str) -> &mut Notification<'a> {
         self.app_image = Some(NotificationImage::Url(url));
         self
     }
 
+    /// Deliver the constructed notifcation immediately
     pub fn deliver(&self) {
         let notification_cls = Class::get("NSUserNotification").unwrap();
         let center = Class::get("NSUserNotificationCenter").unwrap();
